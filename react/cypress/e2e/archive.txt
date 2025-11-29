@@ -1,0 +1,82 @@
+describe('ISTQB E2E Test Suite - Todo App React', () => {
+
+  // Configuration avant chaque test
+  beforeEach(() => {
+    // 1. On visite l'application (Assurez-vous que le Front tourne sur 3000 et le Back sur 8080)
+    cy.visit('http://localhost:3000')
+    
+    // 2. Attente implicite que les données chargent
+    // CORRECTION ICI : On cherche "Todo List" tel qu'écrit dans le JSX, pas le rendu CSS visuel
+    // On ajoute { matchCase: false } pour ignorer la casse si besoin
+    cy.contains('h2', 'Todo List', { matchCase: false }).should('be.visible')
+  })
+
+  it('TC-01 : Smoke Test & Vérification du "Zombie Item" (Bug #002)', () => {
+    // ISTQB : Vérification de l'état initial
+    // Selon votre Backend, si la liste est vide, il crée "Click to edit task name"
+    // On vérifie que cet élément est présent visuellement
+    cy.get('.todoitems')
+      .find('input[type="text"]')
+      .should('have.value', 'Click to edit task name')
+  })
+
+  it('TC-02 : Création d\'une Tâche (Functional Testing)', () => {
+    // 1. Compter les éléments actuels
+    cy.get('.todoitems input[type="text"]').then(($items) => {
+      const initialCount = $items.length
+      
+      // 2. Cliquer sur le bouton "Add task" (Material UI Button)
+      // Dans App.js : <Button variant="contained" onClick={addNewTodoItem}>Add task</Button>
+      cy.contains('button', 'Add task').click()
+
+      // 3. Vérifier qu'un nouvel input est apparu
+      cy.get('.todoitems input[type="text"]').should('have.length', initialCount + 1)
+      
+      // 4. Vérifier que le dernier élément a le texte par défaut
+      cy.get('.todoitems input[type="text"]').last()
+        .should('have.value', 'Click to edit task name')
+    })
+  })
+
+  it('TC-03 : Modification de Tâche (Input & State Update)', () => {
+    const newTaskName = 'Test Cypress Automatisé ' + Date.now()
+
+    // 1. Cibler le premier champ texte
+    cy.get('.todoitems input[type="text"]').first()
+      .clear() // Effacer "Click to edit..."
+      .should('have.value', '') // Wait for the clear action to reflect in the UI
+      .type(newTaskName, { delay: 100 }) // Slow down typing to avoid React state race conditions
+      .blur() // Quitter le champ pour déclencher d'éventuels saves
+
+    // 2. Vérifier que la valeur est bien restée (Persistence locale)
+    cy.get('.todoitems input[type="text"]').first()
+      .should('have.value', newTaskName)
+  })
+
+  it('TC-04 : Transition d\'État (Done/Not Done)', () => {
+    // 1. Cibler la Checkbox du premier élément
+    // Material UI cache l'input checkbox, on doit cibler l'input interne
+    cy.get('.todoitems input[type="checkbox"]').first().check()
+
+    // 2. Vérifier le changement de style visuel
+    // Dans todoitem.jsx : className='done'
+    cy.get('.todoitems input[type="text"]').first()
+      .should('have.class', 'done') // Vérifie votre classe CSS App.css
+      .and('have.css', 'text-decoration', 'line-through solid rgba(0, 0, 0, 0.3)') // Vérifie le style CSS calculé
+  })
+
+  it('TC-05 : Suppression (Delete) & Confirmation Bug Zombie', () => {
+    // 1. Cibler le bouton poubelle via son aria-label 
+    // Dans todoitem.jsx : <IconButton aria-label="delete" ...>
+    cy.get('button[aria-label="delete"]').first().click()
+
+    // 2. Vérification ISTQB du Bug "Zombie"
+    // Scénario : Si c'était le seul élément, le backend va le recréer instantanément
+    
+    cy.wait(500) // Petite pause pour laisser le backend répondre
+
+    // Assertion : Si l'élément est toujours là (ou revenu), le bug est confirmé visuellement
+    cy.get('.todoitems input[type="text"]').should('exist')
+  })
+
+})

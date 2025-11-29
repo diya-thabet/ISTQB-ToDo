@@ -1,0 +1,206 @@
+\documentclass[11pt, a4paper]{article}
+
+% --- PAQUETS REQUIS ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+% --- COULEURS INSTITUTIONNELLES ---
+\definecolor{primaryBlue}{RGB}{0, 51, 102}
+\definecolor{lightGray}{RGB}{245, 245, 245}
+
+% --- CONFIGURATION MISE EN PAGE ---
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\setlength{\parskip}{1em}
+\renewcommand{\baselinestretch}{1.2}
+
+% --- HYPERLIENS ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryBlue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+% --- EN-TÊTES ---
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\textbf{Projet Todo App FullStack}}
+\lhead{\small Plan de Test Maître}
+\rfoot{\small Page \thepage}
+\lfoot{\small ISTQB V4.0}
+
+% --- PAGE DE TITRE ---
+\title{
+    \vspace{-2cm}
+    \textbf{\Large École Nationale d'Ingénieurs de Carthage}\\[0.5cm]
+    \rule{\linewidth}{0.5mm}\\[1.5cm]
+    \textbf{\Huge PLAN DE TEST MAÎTRE}\\[1cm]
+    \Large Projet de Validation Logicielle (ISTQB)\\[0.5cm]
+    \large Todo App (Spring Boot + React)
+    \vspace{2cm}
+}
+
+\author{
+    \textbf{Équipe QA :}\\[0.5cm]
+    \begin{tabular}{ll}
+        \textbf{Mohamed Dhia Eddine Thabet} & \textit{Test Manager} \\
+        \textbf{Mohamed Aziz Dridi} & \textit{Tester}
+    \end{tabular}
+}
+
+\date{Novembre 2025 \\ Version 1.0}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+\subsection{1.1 Objectif du document}
+Ce document formalise la stratégie de validation pour l'application \textbf{"Todo App"}. Notre mission est d'assurer la qualité technique et fonctionnelle du produit avant sa livraison. 
+
+Nous avons adopté une approche de \textbf{"Qualité Totale"}, couvrant l'analyse du code, les tests unitaires, l'intégration, le système (interface) et la performance, en stricte conformité avec les standards \textbf{ISTQB Advanced Level}.
+
+\subsection{1.2 Portée (In-Scope)}
+Le périmètre de test couvre l'ensemble de la stack technique :
+\begin{itemize}[label=\textcolor{primaryBlue}{\textbullet}]
+    \item \textbf{Backend (API) :} Contrôleurs REST, Services métier et Repository (Java/Spring Boot).
+    \item \textbf{Frontend (UI) :} Interface utilisateur, formulaires et navigation (React.js).
+    \item \textbf{Performance :} Capacité de charge et temps de réponse.
+    \item \textbf{Qualité du Code :} Analyse statique et détection de dette technique.
+\end{itemize}
+
+\subsection{1.3 Hors Périmètre (Out-of-Scope)}
+\begin{itemize}[label=\textcolor{primaryBlue}{\textbullet}]
+    \item Persistance SQL : L'application utilisant une base de données en mémoire (H2/ArrayList), la perte de données au redémarrage est un comportement attendu.
+\end{itemize}
+
+\section{Stratégie de Test (Approche)}
+
+Nous appliquons la Pyramide de Test pour optimiser le retour sur investissement (ROI) de nos tests.
+
+\subsection{2.1 Tests Unitaires \& Intégration (Backend)}
+\begin{itemize}[label=\textcolor{primaryBlue}{\textbullet}]
+    \item \textbf{Approche :} Isolation des composants via \textit{Mocking}. Validation de la logique métier du \texttt{TodoService}.
+    \item \textbf{Objectif :} Couverture de code > 80\% (vérifié par JaCoCo) et Robustesse vérifiée par tests de mutation (PITest).
+\end{itemize}
+
+\subsection{2.2 Tests Système \& E2E (Frontend)}
+\begin{itemize}[label=\textcolor{primaryBlue}{\textbullet}]
+    \item \textbf{Approche :} Simulation de parcours utilisateurs réels (Création, Modification, Suppression).
+    \item \textbf{Focus :} Expérience utilisateur (UX) et validation visuelle des bugs.
+\end{itemize}
+
+\subsection{2.3 Tests de Performance}
+\begin{itemize}[label=\textcolor{primaryBlue}{\textbullet}]
+    \item \textbf{Scénario :} Test de Charge (Load Test) avec 50 utilisateurs virtuels simultanés.
+    \item \textbf{Critère :} Temps de réponse moyen < 200ms.
+\end{itemize}
+
+\section{Environnement de Test}
+
+Ce tableau résume la stack technique et les outils de qualité mis en œuvre.
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|p{0.35\textwidth}|p{0.55\textwidth}|}
+\hline
+\rowcolor{primaryBlue} \textbf{\textcolor{white}{Composant}} & \textbf{\textcolor{white}{Technologie / Outil}} \\ \hline
+Langage Backend & Java 17 (Spring Boot 2.7.3) \\ \hline
+\rowcolor{lightGray} Langage Frontend & JavaScript (React 18) \\ \hline
+Gestion de Version & \textbf{Git \& GitHub} \\ \hline
+Build Tools & Maven (Back) / NPM (Front) \\ \hline
+\rowcolor{lightGray} CI/CD & Jenkins \\ \hline
+Tests Unitaires & JUnit 5 \\ \hline
+\rowcolor{lightGray} Couverture de Code & \textbf{JaCoCo} (Line \& Branch Coverage) \\ \hline
+Tests de Mutation & \textbf{PITest} (Robustesse des tests) \\ \hline
+\rowcolor{lightGray} Analyse Statique & \textbf{SonarQube} (Qualité \& Sécurité) \\ \hline
+Tests E2E & Cypress \\ \hline
+\rowcolor{lightGray} Tests de Performance & Apache JMeter \\ \hline
+\end{tabular}
+\caption{Matrice de l'environnement de test et outils QA}
+\end{table}
+
+\section{Analyse des Risques}
+
+L'analyse du code source a révélé des risques critiques. Ces risques sont priorisés selon leur impact.
+
+\subsection{4.1 Risques Produit (Techniques)}
+
+% Utilisation d'un tableau pour une lisibilité parfaite sans chevauchement
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.8}
+\begin{tabular}{|p{0.3\textwidth}|p{0.6\textwidth}|}
+\hline
+\rowcolor{lightGray} \textbf{Risque Identifié} & \textbf{Description \& Stratégie de Test} \\ \hline
+\textbf{1. Concurrence \newline (Critique)} & L'utilisation d'opérateurs non atomiques (\texttt{idCounter++}) expose à des corruptions de données. \newline \textit{$\rightarrow$ Mitigé par : Stress Test JMeter.} \\ \hline
+\textbf{2. Le "Zombie Item" \newline (Majeur)} & Règle métier forçant la recréation d'une tâche si la liste est vide. \newline \textit{$\rightarrow$ Mitigé par : Test E2E Cypress (TC-05).} \\ \hline
+\textbf{3. Boucles Infinies \newline (Moyen)} & Gestion risquée des dépendances dans les Hooks React (\texttt{useEffect}). \newline \textit{$\rightarrow$ Mitigé par : Analyse SonarQube.} \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Intégration Continue (CI/CD)}
+
+Un pipeline Jenkins a été implémenté pour automatiser le cycle de qualité. Il est déclenché via \textbf{Git/GitHub} à chaque modification du code.
+
+\textbf{Étapes du Pipeline :}
+\begin{enumerate}
+    \item Checkout SCM (Récupération du code depuis GitHub).
+    \item Compilation (Build).
+    \item Tests Unitaires \& Intégration.
+    \item Vérification Quality Gate (JaCoCo).
+    \item Archivage des rapports.
+\end{enumerate}
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\parbox[c][6cm]{0.9\textwidth}{\centering
+    \vspace{2.5cm}
+    \textbf{\textcolor{gray}{[INSÉRER ICI VOTRE CAPTURE D'ÉCRAN JENKINS STAGE VIEW]}} \\
+    \small\textit{(Remplacez ce cadre par votre image)}
+    \vspace{2.5cm}
+  }}
+  \caption{Visualisation du Pipeline Jenkins}
+  \label{fig:jenkins}
+\end{figure}
+
+\section{Critères de Sortie (Exit Criteria)}
+
+Le logiciel est déclaré \textbf{"Validé pour Démonstration"} si :
+
+\begin{itemize}[label=$\square$]
+    \item \textbf{100\%} des tests Cypress passent.
+    \item \textbf{100\%} des tests JUnit passent.
+    \item Couverture de code \textbf{> 80\%}.
+    \item Aucune régression de performance sous 50 utilisateurs.
+    \item Tous les bugs connus sont documentés.
+\end{itemize}
+
+\vspace{2cm}
+
+\noindent
+\begin{tabular}{p{7cm} p{7cm}}
+\textbf{Mohamed Dhia Eddine Thabet} & \textbf{Mohamed Aziz Dridi} \\
+\textit{Signature} & \textit{Signature} \\
+\end{tabular}
+
+\end{document}
