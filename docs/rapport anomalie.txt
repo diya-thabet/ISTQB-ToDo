@@ -1,0 +1,146 @@
+\documentclass[11pt, a4paper]{article}
+
+% --- PAQUETS ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{colortbl}
+
+% --- STYLE ---
+\definecolor{primaryBlue}{RGB}{0, 51, 102}
+\definecolor{criticalRed}{RGB}{180, 0, 0}
+\definecolor{majorOrange}{RGB}{230, 115, 0}
+\definecolor{mediumYellow}{RGB}{204, 153, 0}
+
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\setlength{\parskip}{1em}
+\renewcommand{\baselinestretch}{1.2}
+
+% --- EN-TÊTES ---
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\textbf{Projet Todo App FullStack}}
+\lhead{\small Rapport d'Anomalie}
+\rfoot{\small Page \thepage}
+\lfoot{\small ISTQB V4.0}
+
+% --- TITRE ---
+\title{
+    \vspace{-2cm}
+    \textbf{\Large École Nationale d'Ingénieurs de Carthage}\\[0.5cm]
+    \rule{\linewidth}{0.5mm}\\[1.5cm]
+    \textbf{\Huge RAPPORT D'ANOMALIE}\\[1cm]
+    \Large Gestion des Défauts (Defect Lifecycle)\\[0.5cm]
+    \vspace{2cm}
+}
+\author{
+    \textbf{Équipe QA :}\\[0.5cm]
+    \begin{tabular}{ll}
+        \textbf{Mohamed Dhia Eddine Thabet} & \textit{Test Manager} \\
+        \textbf{Mohamed Aziz Dridi} & \textit{Tester}
+    \end{tabular}
+}
+\date{Novembre 2025}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\section{Anomalie 1 : Instabilité des Données}
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{|p{0.3\textwidth}|p{0.6\textwidth}|}
+\hline
+\rowcolor{primaryBlue} \textbf{\textcolor{white}{Champ}} & \textbf{\textcolor{white}{Détails}} \\ \hline
+\textbf{ID Défaut} & BUG-BACK-001 \\ \hline
+\textbf{Titre} & Duplication d'IDs et perte de données sous charge. \\ \hline
+\textbf{Sévérité} & \textcolor{criticalRed}{\textbf{CRITIQUE}} \\ \hline
+\textbf{Priorité} & \textbf{HAUTE} \\ \hline
+\textbf{Composant} & \texttt{TodoRepository.java} \\ \hline
+\textbf{Détecté via} & Test de Performance JMeter \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection*{Description Technique}
+La variable \texttt{idCounter} est incrémentée de manière non atomique (\texttt{++}). Lors du test de charge (50 utilisateurs simultanés), plusieurs tâches ont reçu le même ID, provoquant l'écrasement des données précédentes en mémoire. Cela constitue une violation critique de l'intégrité des données (Data Integrity Violation).
+
+\subsection*{Preuve / Log}
+\begin{figure}[htbp]
+    \centering
+    \fbox{\parbox[c][4cm]{0.9\textwidth}{\centering \vspace{1.5cm} \textbf{\textcolor{gray}{[INSÉRER CAPTURE LOG CONSOLE OU JMETER]}} \vspace{1.5cm}}}
+    \caption{Évidence du défaut de concurrence}
+\end{figure}
+
+\newpage
+
+\section{Anomalie 2 : Le "Zombie Item"}
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{|p{0.3\textwidth}|p{0.6\textwidth}|}
+\hline
+\rowcolor{primaryBlue} \textbf{\textcolor{white}{Champ}} & \textbf{\textcolor{white}{Détails}} \\ \hline
+\textbf{ID Défaut} & BUG-LOGIC-002 \\ \hline
+\textbf{Titre} & Réapparition inattendue d'une tâche supprimée. \\ \hline
+\textbf{Sévérité} & \textcolor{majorOrange}{\textbf{MAJEURE}} \\ \hline
+\textbf{Priorité} & \textbf{MOYENNE} \\ \hline
+\textbf{Composant} & \texttt{TodoRepository.java} (Méthode \texttt{fetchAllTodos}) \\ \hline
+\textbf{Détecté via} & Test E2E Cypress (TC-05) \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection*{Description Fonctionnelle}
+Le backend contient une règle métier explicite qui recrée une tâche par défaut "Click to edit task name" si la liste devient vide.
+\begin{itemize}
+    \item \textbf{Conséquence :} L'utilisateur ne peut jamais avoir une "Inbox Zero". S'il supprime tout, une tâche revient. Cela contredit les principes d'ergonomie standards (UX) et peut causer de la confusion.
+\end{itemize}
+
+\subsection*{Preuve Visuelle}
+\begin{figure}[htbp]
+    \centering
+    \fbox{\parbox[c][4cm]{0.9\textwidth}{\centering \vspace{1.5cm} \textbf{\textcolor{gray}{[INSÉRER CAPTURE VIDÉO CYPRESS]}} \vspace{1.5cm}}}
+    \caption{La tâche réapparaît après suppression (Cypress)}
+\end{figure}
+
+\newpage
+
+\section{Anomalie 3 : Risque de Boucle Infinie (Frontend)}
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{|p{0.3\textwidth}|p{0.6\textwidth}|}
+\hline
+\rowcolor{primaryBlue} \textbf{\textcolor{white}{Champ}} & \textbf{\textcolor{white}{Détails}} \\ \hline
+\textbf{ID Défaut} & BUG-FRONT-003 \\ \hline
+\textbf{Titre} & Gestion risquée du Hook \texttt{useEffect} (Infinite Render). \\ \hline
+\textbf{Sévérité} & \textcolor{mediumYellow}{\textbf{MOYENNE}} \\ \hline
+\textbf{Priorité} & \textbf{BASSE} \\ \hline
+\textbf{Composant} & \texttt{App.js} \\ \hline
+\textbf{Détecté via} & Analyse Statique SonarQube \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection*{Description Technique}
+Dans le fichier \texttt{App.js}, le hook \texttt{useEffect} qui charge les données possède \texttt{todoItems} dans son tableau de dépendances.
+\begin{itemize}
+    \item \textbf{Problème :} Si \texttt{setTodoItems} est appelé à l'intérieur de l'effet (ce qui est le cas via \texttt{fetch}), cela modifie \texttt{todoItems}, ce qui redéclenche l'effet, créant potentiellement une boucle infinie de requêtes réseau.
+    \item \textbf{Impact :} Risque de saturation du navigateur client et surcharge inutile du backend.
+\end{itemize}
+
+\subsection*{Recommandation de Correction}
+Retirer \texttt{todoItems} du tableau de dépendances ou utiliser une fonction de mise à jour fonctionnelle pour briser le cycle.
+
+\end{document}

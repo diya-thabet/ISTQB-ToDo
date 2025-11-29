@@ -1,0 +1,168 @@
+\documentclass[11pt, a4paper]{article}
+
+% --- PAQUETS ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{float} % Pour mieux gérer le placement des figures
+
+% --- STYLE ---
+\definecolor{primaryBlue}{RGB}{0, 51, 102}
+\definecolor{lightGray}{RGB}{245, 245, 245}
+
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\setlength{\parskip}{1em}
+\renewcommand{\baselinestretch}{1.2}
+
+% --- EN-TÊTES ---
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\textbf{Projet Todo App FullStack}}
+\lhead{\small Spécifications de Test}
+\rfoot{\small Page \thepage}
+\lfoot{\small ISTQB V4.0}
+
+% --- TITRE ---
+\title{
+    \vspace{-2cm}
+    \textbf{\Large École Nationale d'Ingénieurs de Carthage}\\[0.5cm]
+    \rule{\linewidth}{0.5mm}\\[1.5cm]
+    \textbf{\Huge SPÉCIFICATIONS DES TESTS}\\[1cm]
+    \Large Tests Dynamiques (Boîte Noire \& Blanche)\\[0.5cm]
+    \vspace{2cm}
+}
+\author{
+    \textbf{Équipe QA :}\\[0.5cm]
+    \begin{tabular}{ll}
+        \textbf{Mohamed Dhia Eddine Thabet} & \textit{Test Manager} \\
+        \textbf{Mohamed Aziz Dridi} & \textit{Tester}
+    \end{tabular}
+}
+\date{Novembre 2025}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\section{Niveau 1 : Tests Unitaires (Boîte Blanche)}
+\textbf{Objectif :} Valider la logique interne du code avant déploiement.
+
+\begin{itemize}[label=\textcolor{primaryBlue}{\textbullet}]
+    \item \textbf{Outils :} JUnit 5, Mockito.
+    \item \textbf{Qualité Code :} JaCoCo (Couverture) \& PITest (Robustesse).
+    \item \textbf{Résultat :} 100\% des tests passants. Couverture > 80\%.
+\end{itemize}
+
+% --- IMAGE 1 : JACOCO ---
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox[c][4cm]{0.9\textwidth}{\centering \vspace{1.5cm} \textbf{\textcolor{gray}{[INSÉRER CAPTURE RAPPORT JACOCO (COVERAGE)]}} \vspace{1.5cm}}}
+    \caption{Preuve de couverture structurelle (JaCoCo)}
+\end{figure}
+
+% --- IMAGE 2 : PITEST ---
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox[c][4cm]{0.9\textwidth}{\centering \vspace{1.5cm} \textbf{\textcolor{gray}{[INSÉRER CAPTURE RAPPORT PITEST (MUTATION)]}} \vspace{1.5cm}}}
+    \caption{Score de mutation et robustesse (PITest)}
+\end{figure}
+
+% --- IMAGE 3 : JUNIT/MOCKITO ---
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox[c][4cm]{0.9\textwidth}{\centering \vspace{1.5cm} \textbf{\textcolor{gray}{[INSÉRER CAPTURE JUNIT / MOCKITO (GREEN BAR)]}} \vspace{1.5cm}}}
+    \caption{Exécution des tests unitaires dans l'IDE}
+\end{figure}
+
+\section{Niveau 2 : Tests d'API (Intégration)}
+\textbf{Objectif :} Vérifier les contrats d'interface REST.
+
+\subsection{2.1 Tests Automatisés (MockMvc)}
+Validation des codes retour HTTP (200 OK, 404 Not Found) directement dans le pipeline CI/CD.
+
+\subsection{2.2 Tests Manuels Exploratoires (Postman)}
+Des tests manuels ont été effectués pour valider les cas limites non scriptés.
+\begin{itemize}
+    \item \textbf{Scénario :} Envoi de payload JSON malformé.
+    \item \textbf{Résultat :} L'API retourne une erreur 400 (Comportement attendu).
+\end{itemize}
+
+\section{Niveau 3 : Tests Système E2E (Boîte Noire)}
+\textbf{Objectif :} Valider le parcours utilisateur final sur l'interface React.
+
+\subsection{3.1 Scénarios Automatisés (Cypress)}
+Validation des flux critiques (Création, Modification, Suppression).
+\begin{itemize}[label=$\checkmark$]
+    \item TC-01 : Affichage initial.
+    \item TC-02 : Ajout de tâche.
+    \item TC-05 : Suppression (Détection du Bug Zombie).
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox[c][5cm]{0.9\textwidth}{\centering \vspace{2cm} \textbf{\textcolor{gray}{[INSÉRER CAPTURE CYPRESS SUCCÈS]}} \vspace{2cm}}}
+    \caption{Exécution réussie des tests E2E Cypress}
+\end{figure}
+
+\section{Niveau 4 : Tests de Performance (JMeter)}
+\textbf{Objectif :} Valider la tenue en charge du serveur Tomcat et analyser le comportement des temps de réponse sous stress.
+
+Une campagne de test de charge a été réalisée sur l'endpoint \texttt{POST /api/todoItems}. Les résultats ci-dessous sont basés sur une exécution réelle avec 50 threads concurrents.
+
+\subsection{4.1 Analyse des Résultats (Summary Report)}
+
+Le tableau suivant présente les métriques clés extraites du rapport de synthèse JMeter. Ces données confirment la capacité du serveur à traiter les requêtes, mais soulignent une variabilité importante des temps de réponse.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|p{0.4\textwidth}|p{0.5\textwidth}|}
+\hline
+\rowcolor{primaryBlue} \textbf{\textcolor{white}{Métrique JMeter}} & \textbf{\textcolor{white}{Valeur Mesurée \& Interprétation}} \\ \hline
+\textbf{Échantillons (Samples)} & \textbf{2 500 requêtes} \newline (50 utilisateurs $\times$ 50 itérations). Le volume est suffisant pour être statistiquement significatif. \\ \hline
+\textbf{Moyenne (Average)} & \textbf{2 ms} \newline Temps de réponse moyen extrêmement rapide, indiquant que le serveur n'est pas saturé par le traitement unitaire. \\ \hline
+\textbf{Min / Max} & \textbf{0 ms / 236 ms} \newline L'écart important (Max) suggère des pics de latence ponctuels, probablement dus au Garbage Collector Java ou à la contention sur la liste synchronisée. \\ \hline
+\textbf{Débit (Throughput)} & \textbf{1 371,4 requêtes/sec} \newline Le serveur encaisse une charge très élevée, ce qui est attendu pour une base de données en mémoire. \\ \hline
+\textbf{Erreur \%} & \textbf{0.00\%} \newline Aucune erreur HTTP (500/404) n'a été renvoyée. Le serveur est techniquement stable, même si les données peuvent être corrompues logiquement (voir Bug \#1). \\ \hline
+\end{tabular}
+\caption{Synthèse des performances (Données réelles JMeter)}
+\end{table}
+
+\subsection{4.2 Analyse de la Distribution (Percentiles)}
+
+Pour une analyse plus fine que la simple moyenne, nous observons les percentiles qui reflètent l'expérience utilisateur réelle.
+
+\begin{itemize}
+    \item \textbf{90th Percentile (4 ms) :} 90\% des utilisateurs ont une réponse quasi-instantanée (inférieure à 4 ms).
+    \item \textbf{99th Percentile (23 ms) :} 1\% des requêtes subissent un ralentissement notable (jusqu'à 23 ms), restant toutefois bien en dessous du seuil critique de 200 ms.
+\end{itemize}
+
+\subsection{4.3 Graphique des Résultats}
+
+La capture ci-dessous illustre le rapport de synthèse généré par JMeter à l'issue du tir.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox[c][8cm]{0.95\textwidth}{\centering \vspace{3.5cm} \textbf{\textcolor{gray}{[INSÉRER L'IMAGE : jmeter.png]}} \vspace{3.5cm}}}
+    \caption{Rapport de synthèse JMeter (Summary Report)}
+\end{figure}
+
+\subsection{4.4 Conclusion de la Performance}
+
+Sur le plan purement protocolaire (HTTP), l'application démontre une \textbf{excellente performance} avec un débit élevé et un taux d'erreur nul. Cependant, cette performance brute masque le défaut de concurrence (écrasement des IDs) identifié lors de l'analyse fonctionnelle post-test.
+
+\textit{Recommandation :} Maintenir ce niveau de performance tout en corrigeant la thread-safety du Repository (passage à \texttt{AtomicInteger}).
+
+\end{document}
