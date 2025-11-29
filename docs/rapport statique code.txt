@@ -1,0 +1,136 @@
+\documentclass[11pt, a4paper]{article}
+
+% --- PAQUETS ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+% --- STYLE ---
+\definecolor{primaryBlue}{RGB}{0, 51, 102}
+\definecolor{lightGray}{RGB}{245, 245, 245}
+\definecolor{codeBg}{RGB}{250, 250, 250}
+
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\setlength{\parskip}{1em}
+\renewcommand{\baselinestretch}{1.2}
+
+% --- EN-TÊTES ---
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\textbf{Projet Todo App}}
+\lhead{\small Rapport Statique}
+\rfoot{\small Page \thepage}
+\lfoot{\small ISTQB V4.0}
+
+% --- TITRE ---
+\title{
+    \vspace{-2cm}
+    \textbf{\Large École Nationale d'Ingénieurs de Carthage}\\[0.5cm]
+    \rule{\linewidth}{0.5mm}\\[1.5cm]
+    \textbf{\Huge RAPPORT DE TEST STATIQUE}\\[1cm]
+    \Large Analyse de la Qualité du Code (Backend \& Frontend)\\[0.5cm]
+    \vspace{2cm}
+}
+\author{
+    \textbf{Équipe QA :}\\[0.5cm]
+    \begin{tabular}{ll}
+        \textbf{Mohamed Dhia Eddine Thabet} & \textit{Test Manager} \\
+        \textbf{Mohamed Aziz Dridi} & \textit{Tester}
+    \end{tabular}
+}
+\date{Novembre 2025}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\section{Synthèse de la Qualité (Executive Summary)}
+
+L'analyse statique a été réalisée à l'aide de \textbf{SonarQube} pour évaluer la dette technique, la fiabilité et la sécurité du code avant toute exécution.
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{|p{0.3\textwidth}|c|c|c|}
+\hline
+\rowcolor{primaryBlue} \textbf{\textcolor{white}{Module}} & \textbf{\textcolor{white}{Fiabilité}} & \textbf{\textcolor{white}{Sécurité}} & \textbf{\textcolor{white}{Maintenabilité}} \\ \hline
+\textbf{Backend (Java)} & \textcolor{red}{\textbf{Grade C (Critique)}} & Grade A & Grade A \\ \hline
+\rowcolor{lightGray} \textbf{Frontend (React)} & \textcolor{orange}{\textbf{Grade B (Majeur)}} & Grade A & Grade A \\ \hline
+\end{tabular}
+\caption{Tableau de bord Qualité SonarQube}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{\parbox[c][10cm]{0.9\textwidth}{\centering \vspace{4.5cm} \textbf{\textcolor{gray}{[INSÉRER CAPTURE SONARQUBE GLOBALE]}} \vspace{4.5cm}}}
+    \caption{Preuve d'audit SonarQube}
+\end{figure}
+
+\section{Analyse Approfondie : Backend (Java)}
+
+Une revue manuelle combinée à l'analyse automatisée a révélé une faille critique de conception.
+
+\subsection{2.1 Violation de Thread-Safety (Critique)}
+\textbf{Composant :} \texttt{TodoRepository.java}
+
+\begin{itemize}[label=\textcolor{primaryBlue}{\textbullet}]
+    \item \textbf{Problème :} Utilisation d'un compteur simple (\texttt{Integer idCounter}) incrémenté via \texttt{++} dans un Bean Singleton.
+    \item \textbf{Impact ISTQB :} \textit{Défaut de Fiabilité}. En cas d'accès concurrent, deux tâches peuvent hériter du même ID, entraînant une perte de données.
+    \item \textbf{Preuve Code :}
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \colorbox{codeBg}{
+        \begin{minipage}{0.8\textwidth}
+        \ttfamily
+        \small
+        @Repository \\
+        public class TodoRepository \{ \\
+        \hspace*{1cm} private Integer idCounter = 0; // NON ATOMIQUE \\
+        \hspace*{1cm} ... \\
+        \hspace*{1cm} item.setId(idCounter++); // DANGER \\
+        \}
+        \end{minipage}
+    }
+    \caption{Snippet du code incriminé}
+\end{figure}
+
+\section{Analyse Approfondie : Frontend (React)}
+
+\subsection{3.1 Gestion des Hooks (Fiabilité)}
+\textbf{Composant :} \texttt{App.js}
+
+\begin{itemize}[label=\textcolor{primaryBlue}{\textbullet}]
+    \item \textbf{Code Smell :} Le hook \texttt{useEffect} possède une dépendance sur l'état qu'il modifie lui-même.
+    \item \textbf{Risque :} Boucle de rendu infinie (Infinite Re-render) pouvant bloquer le navigateur client.
+\end{itemize}
+
+\section{Conclusion \& Recommandations}
+
+Le code est propre et bien formaté, mais la gestion de la concurrence côté serveur est **inacceptable pour une mise en production**.
+
+\textbf{Actions requises :}
+\begin{enumerate}
+    \item Remplacer \texttt{Integer} par \texttt{AtomicInteger} dans le Repository.
+    \item Refactoriser le \texttt{useEffect} du Frontend.
+\end{enumerate}
+
+\vspace{2cm}
+\begin{center}
+    \textit{Document validé par l'équipe QA de l'ENICarthage.}
+\end{center}
+
+\end{document}
