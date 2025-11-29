@@ -4,56 +4,48 @@ pipeline {
     stages {
         stage('Initialize') {
             steps {
-                echo '🚀 Démarrage du Pipeline ISTQB Todo-App...'
-                // Rend le wrapper exécutable (au cas où les permissions Git seraient perdues)
-                sh 'chmod +x mvnw'
-                // Vérifie que Java et Maven Wrapper fonctionnent
-                sh './mvnw -version'
+                echo '🚀 Démarrage du Pipeline...'
+                // IMPORTANT : On entre dans le dossier où se trouve le pom.xml
+                dir('todo-app') {
+                    // On donne les droits d'exécution au wrapper
+                    sh 'chmod +x mvnw'
+                    sh './mvnw -version'
+                }
             }
         }
 
-        stage('Build & Compile') {
+        stage('Build & Test') {
             steps {
-                echo '🔨 Compilation du code source...'
-                // Compile le code sans lancer les tests (rapide)
-                sh './mvnw clean compile'
-            }
-        }
-
-        stage('Test & Quality Gate') {
-            steps {
-                echo '🧪 Exécution des Tests (Unitaires, Intégration, Performance)...'
-                echo '📊 Vérification de la couverture JaCoCo (> 80%)...'
-                
-                // Lance les tests et vérifie la couverture
-                // Si JaCoCo < 80%, cette commande retournera une erreur et le build deviendra ROUGE
-                sh './mvnw verify'
+                dir('todo-app') {
+                    echo '🧪 Lancement des Tests et de JaCoCo...'
+                    // Lancement via le wrapper (plus sûr que 'mvn')
+                    sh './mvnw clean verify'
+                }
             }
         }
     }
 
     post {
         always {
-            echo '📝 Archivage des rapports de test...'
-            // Récupère les résultats JUnit pour les graphiques Jenkins
-            junit 'target/surefire-reports/*.xml'
-            
-            // Archive le rapport JaCoCo
-            // Note: Assurez-vous que le plugin "HTML Publisher" est installé dans Jenkins
-            publishHTML (target: [
-                allowMissing: false,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'target/site/jacoco',
-                reportFiles: 'index.html',
-                reportName: 'Rapport Couverture Code'
-            ])
+            dir('todo-app') {
+                echo '📝 Récupération des rapports...'
+                junit 'target/surefire-reports/*.xml'
+                
+                publishHTML (target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'target/site/jacoco',
+                    reportFiles: 'index.html',
+                    reportName: 'Rapport Couverture Code'
+                ])
+            }
         }
         success {
-            echo '✅ SUCCÈS : Le projet respecte tous les critères ISTQB !'
+            echo '✅ SUCCÈS : Projet validé !'
         }
         failure {
-            echo '❌ ÉCHEC : Qualité insuffisante ou Tests échoués.'
+            echo '❌ ÉCHEC : Regardez les logs pour voir l\'erreur.'
         }
     }
 }
