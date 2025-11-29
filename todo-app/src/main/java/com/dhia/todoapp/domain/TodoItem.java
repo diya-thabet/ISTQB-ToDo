@@ -1,4 +1,4 @@
-package com.reymar.todoapp.domain;
+package com.dhia.todoapp.domain;
 
 public class TodoItem {
 	

@@ -1,0 +1,5 @@
+com/dhia/todoapp/domain/TodoItem.class
+com/dhia/todoapp/service/TodoService.class
+com/dhia/todoapp/TodoAppApplication.class
+com/dhia/todoapp/repository/TodoRepository.class
+com/dhia/todoapp/web/TodoController.class

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TodoController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">todo-app</a> &gt; <a href="index.source.html" class="el_package">com.dhia.todoapp.web</a> &gt; <span class="el_source">TodoController.java</span></div><h1>TodoController.java</h1><pre class="source lang-java linenums">package com.dhia.todoapp.web;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.dhia.todoapp.domain.TodoItem;
+import com.dhia.todoapp.service.TodoService;
+
+@RestController
+@CrossOrigin(origins=&quot;http://localhost:3000&quot;)
+<span class="fc" id="L21">public class TodoController {</span>
+	
+	@Autowired
+	private TodoService todoService;
+	
+	// Fetch Todo Items
+	@GetMapping(&quot;/api/todoItems&quot;)
+	public ResponseEntity&lt;?&gt; fetchAllTodos(){
+<span class="fc" id="L29">		List&lt;TodoItem&gt; todoItems = todoService.fetchAllTodos();		</span>
+<span class="fc" id="L30">		return ResponseEntity.ok(todoItems);</span>
+		
+	}
+	
+	@PostMapping(&quot;/api/todoItems&quot;)
+	public ResponseEntity&lt;?&gt; createNewTodoItem(){
+		// calling the service for addition
+<span class="fc" id="L37">		TodoItem todoItem = todoService.createNewTodoItem();</span>
+		//Return
+<span class="fc" id="L39">		return ResponseEntity.ok(todoItem);</span>
+	}
+	
+	@PutMapping(&quot;/api/todoItems/{id}&quot;)
+	public ResponseEntity&lt;?&gt; updateTodoItem(@PathVariable Integer id, @RequestBody TodoItem todoItem){
+		// Calling service for updation
+<span class="fc" id="L45">		TodoItem updatedTodoItem = todoService.updateTodoItem(id,todoItem);</span>
+		// Return
+<span class="fc" id="L47">		return ResponseEntity.ok(updatedTodoItem); </span>
+		
+	}
+	
+	@DeleteMapping(&quot;/api/todoItems/{id}&quot;)
+	public ResponseEntity&lt;?&gt; deleteTodoItem(@PathVariable Integer id){
+		// Calling service for deletion
+<span class="fc" id="L54">		todoService.deleteTodoItem(id);</span>
+		// Return
+<span class="fc" id="L56">		return ResponseEntity.ok(&quot;ok&quot;);</span>
+		
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,7 @@
+com/dhia/todoapp/perfermance/TodoComplexPerformanceTest.class
+com/dhia/todoapp/service/TodoServiceTest.class
+com/dhia/todoapp/web/TodoControllerTest.class
+com/dhia/todoapp/integration/TodoFullStackIntegrationTest.class
+com/dhia/todoapp/TodoAppApplicationTests.class
+com/dhia/todoapp/perfermance/TodoPerformanceTest.class
+com/dhia/todoapp/repository/TodoRepositoryTest.class

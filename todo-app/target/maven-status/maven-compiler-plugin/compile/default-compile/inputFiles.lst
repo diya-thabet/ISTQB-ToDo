@@ -1,0 +1,5 @@
+/home/dhia/Documents/Developper/ISTQB/ISTQB-ToDo/todo-app/src/main/java/com/dhia/todoapp/TodoAppApplication.java
+/home/dhia/Documents/Developper/ISTQB/ISTQB-ToDo/todo-app/src/main/java/com/dhia/todoapp/domain/TodoItem.java
+/home/dhia/Documents/Developper/ISTQB/ISTQB-ToDo/todo-app/src/main/java/com/dhia/todoapp/repository/TodoRepository.java
+/home/dhia/Documents/Developper/ISTQB/ISTQB-ToDo/todo-app/src/main/java/com/dhia/todoapp/web/TodoController.java
+/home/dhia/Documents/Developper/ISTQB/ISTQB-ToDo/todo-app/src/main/java/com/dhia/todoapp/service/TodoService.java

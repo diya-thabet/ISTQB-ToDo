@@ -1,4 +1,4 @@
-package com.reymar.todoapp.web;
+package com.dhia.todoapp.web;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.reymar.todoapp.domain.TodoItem;
-import com.reymar.todoapp.service.TodoService;
+import com.dhia.todoapp.domain.TodoItem;
+import com.dhia.todoapp.service.TodoService;
 
 @RestController
 @CrossOrigin(origins="http://localhost:3000")

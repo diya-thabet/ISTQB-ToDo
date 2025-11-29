@@ -1,4 +1,4 @@
-package com.reymar.todoapp.service;
+package com.dhia.todoapp.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.reymar.todoapp.domain.TodoItem;
-import com.reymar.todoapp.repository.TodoRepository;
+import com.dhia.todoapp.domain.TodoItem;
+import com.dhia.todoapp.repository.TodoRepository;
 
 @Service
 public class TodoService {

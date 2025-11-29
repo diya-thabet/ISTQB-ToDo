@@ -1,4 +1,4 @@
-package com.reymar.todoapp.repository;
+package com.dhia.todoapp.repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
-import com.reymar.todoapp.domain.TodoItem;
+import com.dhia.todoapp.domain.TodoItem;
 
 @Repository
 public class TodoRepository {

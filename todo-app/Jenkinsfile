@@ -1,0 +1,79 @@
+pipeline {
+    agent any
+
+    // Assurez-vous que ces outils sont configurés dans "Global Tool Configuration" de Jenkins
+    tools {
+        maven 'Maven 3' // Nom de votre installation Maven dans Jenkins
+        jdk 'Java 17'   // Nom de votre installation JDK 17 dans Jenkins
+    }
+
+    environment {
+        // Optionnel : Variables d'environnement pour SonarQube si nécessaire
+        // SONAR_HOST_URL = 'http://localhost:9000'
+    }
+
+    stages {
+        stage('Initialize') {
+            steps {
+                echo '🚀 Démarrage du Pipeline ISTQB Todo-App...'
+                sh 'mvn --version'
+                sh 'java -version'
+            }
+        }
+
+        stage('Build & Compile') {
+            steps {
+                echo '🔨 Compilation du code source...'
+                // Compile sans lancer les tests pour vérifier la syntaxe rapidement
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Test & Quality Gate') {
+            steps {
+                echo '🧪 Exécution des Tests (Unitaires, Intégration, Performance)...'
+                echo '📊 Vérification de la couverture JaCoCo (> 80%)...'
+
+                // C'est ICI que la magie opère :
+                // 'verify' lance les tests ET vérifie la règle JaCoCo que nous avons configurée dans le pom.xml
+                // Si la couverture est < 80%, le build Jenkins deviendra ROUGE (Échec).
+                sh 'mvn verify'
+            }
+        }
+
+        // Étape Optionnelle : Si vous avez le plugin SonarQube installé sur Jenkins
+        /*
+        stage('Static Analysis (SonarQube)') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+        */
+    }
+
+    post {
+        always {
+            echo '📝 Archivage des rapports de test...'
+            // Récupère les résultats JUnit pour les afficher graphiquement dans Jenkins
+            junit 'target/surefire-reports/*.xml'
+
+            // Archive le rapport JaCoCo pour qu'il soit téléchargeable
+            publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'target/site/jacoco',
+                reportFiles: 'index.html',
+                reportName: 'Rapport Couverture Code'
+            ])
+        }
+        success {
+            echo '✅ SUCCÈS : Le projet respecte tous les critères ISTQB !'
+        }
+        failure {
+            echo '❌ ÉCHEC : Qualité insuffisante ou Tests échoués.'
+        }
+    }
+}
