@@ -2,38 +2,43 @@
 
 ## **🌟 Présentation du Projet**
 
-Cette application est un gestionnaire de tâches (Todo List) développé en **React** avec **Tailwind CSS** pour l'interface. Elle utilise **Firebase Firestore** pour la persistance et la synchronisation des données en **temps réel**, assurant une expérience instantanée sur toutes les sessions. Le projet est contenu dans un unique fichier (App.jsx) pour une intégration simplifiée.
+Cette application est un gestionnaire de tâches (Todo List) développé en **React** et stylisé avec **Tailwind CSS**. Elle communique avec un backend robuste implémenté en **Java Spring Boot** qui gère la logique métier, la persistance des données et expose une API RESTful pour les opérations CRUD. Le projet frontend est contenu dans un unique fichier (App.jsx) pour une intégration simplifiée dans des environnements contraints.
 
 ## **✨ Fonctionnalités Clés & Stack Technique**
 
 | Catégorie | Technologie | Rôle Clé |
 | :---- | :---- | :---- |
 | **Frontend** | React (Hooks) / Tailwind CSS | UI moderne, responsive, gestion d'état locale et tri client-side. |
-| **Backend/DB** | Firebase Firestore | CRUD complet (Création, Lecture, Mise à Jour, Suppression) et synchronisation instantanée (onSnapshot). |
-| **Sécurité** | Firebase Auth | Authentification par token ou anonyme et isolation stricte des données utilisateur. |
-| **Architecture** | Monofichier (JSX) | Contrainte d'environnement respectée. |
+| **Backend/Service** | **Java Spring Boot (REST API)** | **Service RESTful exposant les endpoints CRUD** (via HTTP). Gère la logique métier et la communication avec la base de données. |
+| **Base de Données** | PostgreSQL (ou Base de Données Relationnelle/NoSQL) | Persistance sécurisée et structurée des données de tâches. |
+| **Authentification** | Firebase Auth (via Custom Token) | Gestion de l'identité de l'utilisateur (userId) pour l'isolation des données côté service (ou backend). |
+| **Architecture** | Monofichier (JSX) | Contrainte d'environnement respectée pour le frontend. |
 
-## **🛠️ Architecture et Configuration Firestore**
+## **🛠️ Architecture et Configuration**
 
-Les données sont stockées de manière sécurisée et privée sous le chemin d'accès suivant, propre à chaque utilisateur :
+L'architecture est basée sur une communication client-serveur standard :
 
-/artifacts/{\_\_app\_id}/users/{userId}/todo\_items
+1. Le frontend React (App.jsx) effectue des appels HTTP (POST, GET, PUT, DELETE) vers les endpoints de l'API Spring Boot.  
+2. L'API Spring Boot gère la logique de validation, interagit avec la base de données (ex: PostgreSQL) et retourne les réponses au format JSON.
 
-Chaque document de tâche contient les champs : task (String), isDone (Boolean) et createdAt (Timestamp). L'application s'initialise grâce aux variables d'environnement globales : \_\_firebase\_config, \_\_app\_id, et \_\_initial\_auth\_token.
+Chemin de Communication Typique (Frontend-Backend) :  
+\[Client React\] \<--- API RESTful \---\> \[Spring Boot Service\] \<--- JPA/Hibernate \---\> \[Base de Données\]  
+L'application frontend utilise des variables d'environnement globales (\_\_firebase\_config, \_\_app\_id, \_\_initial\_auth\_token) pour son initialisation, notamment pour établir un userId via Firebase Auth, qui serait ensuite transmis au service Spring Boot pour garantir l'isolation des tâches par utilisateur.
 
 ## **🧪 Tests, Assurance Qualité et Outils DevOps**
 
-La robustesse et la qualité du projet ont été validées en utilisant des outils professionnels couvrant l'ensemble du cycle de vie du développement logiciel :
+La validation et la livraison du projet sont assurées par un ensemble d'outils professionnels couvrant l'ensemble du cycle de vie :
 
-* **Tests Fonctionnels et Unitaires:** Validation de la logique métier, du tri client et du fonctionnement du flux utilisateur (Unitaires, Intégration, E2E).  
+* **Tests Fonctionnels et Unitaires:** Validation de la logique métier (Frontend) et des services/contrôleurs de l'API Spring Boot (Backend).  
 * **Gestion des Tests (Xray/JIRA):** Les cas de test et la traçabilité des exigences sont gérés via **Xray** intégré à JIRA.  
-* **Tests de Performance (JMeter):** **Apache JMeter** a été utilisé pour effectuer des tests de charge et valider la scalabilité de la base de données Firestore.  
-* **Intégration Continue (Jenkins):** Le pipeline de CI/CD est automatisé via **Jenkins** pour garantir la construction, le test et le déploiement rapides et fiables après chaque modification.  
-* **Qualité Temps Réel:** Validation de la faible latence de la synchronisation des données et de la conformité des règles de sécurité Firestore.
+* **Tests de Performance (JMeter):** **Apache JMeter** a été utilisé pour effectuer des tests de charge et valider la résilience et la scalabilité des **endpoints de l'API Spring Boot**.  
+* **Intégration Continue (Jenkins):** Le pipeline de CI/CD est automatisé via **Jenkins** pour garantir la construction, le test et le déploiement rapides et fiables du service Spring Boot.  
+* **Qualité Temps Réel:** Validation de la faible latence des requêtes API et de la conformité des règles de sécurité au niveau du service.
 
 ## **🚀 Mise en Place (Pour le développement local)**
 
-Assurez-vous d'avoir Node.js, React et les dépendances Firebase. Remplacez les variables globales par vos propres configurations Firebase et vérifiez vos règles de sécurité.
+* **Backend (Spring Boot) :** Compilez et exécutez le service Spring Boot. Assurez-vous que l'API est accessible via l'URL configurée (ex: http://localhost:8080/api/todos).  
+* **Frontend (React) :** Assurez-vous d'avoir Node.js, React et les dépendances Firebase (pour l'authentification seule). Remplacez les variables globales par vos configurations si nécessaire.
 
 ## **👤 Auteur et Contact**
 
