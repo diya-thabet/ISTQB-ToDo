@@ -21,14 +21,15 @@ Les données sont stockées de manière sécurisée et privée sous le chemin d'
 
 Chaque document de tâche contient les champs : task (String), isDone (Boolean) et createdAt (Timestamp). L'application s'initialise grâce aux variables d'environnement globales : \_\_firebase\_config, \_\_app\_id, et \_\_initial\_auth\_token.
 
-## **🧪 Tests et Assurance Qualité**
+## **🧪 Tests, Assurance Qualité et Outils DevOps**
 
-Le projet a été validé pour garantir sa robustesse, sa sécurité et sa performance en temps réel, couvrant l'ensemble de la pyramide de test :
+La robustesse et la qualité du projet ont été validées en utilisant des outils professionnels couvrant l'ensemble du cycle de vie du développement logiciel :
 
-* **Tests Unitaires:** Validation de la logique de tri client et de la manipulation d'état des composants isolés (ex: le changement de texte de la tâche).  
-* **Tests d'Intégration:** Confirmation de la réussite des opérations CRUD avec Firestore et du fonctionnement correct de l'écoute en temps réel (onSnapshot).  
-* **Tests E2E (Bout-en-Bout):** Simulation du parcours utilisateur complet (ajout, modification, complétion, suppression) et vérification de la réactivité UI/UX.  
-* **Tests Non-Fonctionnels:** Validation de la faible latence de la synchronisation et de la conformité de l'isolation des données via les règles de sécurité Firestore.
+* **Tests Fonctionnels et Unitaires:** Validation de la logique métier, du tri client et du fonctionnement du flux utilisateur (Unitaires, Intégration, E2E).  
+* **Gestion des Tests (Xray/JIRA):** Les cas de test et la traçabilité des exigences sont gérés via **Xray** intégré à JIRA.  
+* **Tests de Performance (JMeter):** **Apache JMeter** a été utilisé pour effectuer des tests de charge et valider la scalabilité de la base de données Firestore.  
+* **Intégration Continue (Jenkins):** Le pipeline de CI/CD est automatisé via **Jenkins** pour garantir la construction, le test et le déploiement rapides et fiables après chaque modification.  
+* **Qualité Temps Réel:** Validation de la faible latence de la synchronisation des données et de la conformité des règles de sécurité Firestore.
 
 ## **🚀 Mise en Place (Pour le développement local)**
 
